@@ -1,0 +1,272 @@
+/* ============================================================
+   WELCOME.CSS — Pantalla de bienvenida
+   Paleta basada en index.css + animaciones de App.css
+   ============================================================ */
+
+.welcome-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: var(--space-lg);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
+    var(--bg-main);
+}
+
+/* ---------- Orbes de luz flotantes ---------- */
+.welcome-orb {
+  position: absolute;
+  border-radius: var(--radius-full);
+  filter: blur(80px);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.welcome-orb--1 {
+  width: 420px;
+  height: 420px;
+  top: -10%;
+  left: -8%;
+  background: var(--accent-primary);
+  animation: orb-float-1 14s ease-in-out infinite;
+}
+
+.welcome-orb--2 {
+  width: 360px;
+  height: 360px;
+  bottom: -12%;
+  right: -6%;
+  background: var(--accent-rose);
+  animation: orb-float-2 18s ease-in-out infinite;
+}
+
+.welcome-orb--3 {
+  width: 300px;
+  height: 300px;
+  top: 40%;
+  right: 20%;
+  background: var(--accent-aurora);
+  opacity: 0.3;
+  animation: orb-float-3 22s ease-in-out infinite;
+}
+
+@keyframes orb-float-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(60px, 40px) scale(1.15); }
+}
+
+@keyframes orb-float-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-50px, -30px) scale(1.2); }
+}
+
+@keyframes orb-float-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+  50%      { transform: translate(-40px, 50px) scale(1.1); opacity: 0.5; }
+}
+
+/* ---------- Contenido central ---------- */
+.welcome-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-lg);
+  max-width: 560px;
+  width: 100%;
+}
+
+/* ---------- Logo ---------- */
+.Welcome-logo-wrapper {
+  position: relative;
+  padding: var(--space-md);
+  border-radius: var(--radius-xl);
+  background: rgba(26, 35, 50, 0.5);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--border-color);
+  box-shadow:
+    var(--shadow-card),
+    0 0 40px -10px var(--accent-glow);
+}
+
+/* Halo pulsante detrás del logo */
+.Welcome-logo-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: var(--gradient-primary);
+  background-size: 200% 200%;
+  z-index: -1;
+  filter: blur(18px);
+  opacity: 0.5;
+  animation: gradientShift 5s ease infinite, soft-pulse-halo 3.5s ease-in-out infinite;
+}
+
+@keyframes soft-pulse-halo {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 0.65; }
+}
+
+.Welcome-logo {
+  width: 220px;
+  height: 90px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+  transition: transform var(--transition-bounce);
+}
+
+.Welcome-logo-wrapper:hover .Welcome-logo {
+  transform: scale(1.05);
+}
+
+/* ---------- Título ---------- */
+.welcome-title {
+  font-family: var(--font-title);
+  font-size: var(--fs-4xl);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.welcome-title__accent {
+  background: linear-gradient(
+    135deg,
+    var(--accent-soft) 0%,
+    var(--accent-rose) 50%,
+    var(--accent-sunset) 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 5s ease infinite;
+  display: inline-block;
+}
+
+/* ---------- Subtítulo ---------- */
+.welcome-subtitle {
+  font-family: var(--font-body);
+  font-size: var(--fs-lg);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 420px;
+  margin: 0;
+}
+
+/* ---------- CTA principal ---------- */
+.welcome-cta {
+  margin-top: var(--space-sm);
+  padding: 0 2rem;
+  height: 52px;
+  font-size: var(--fs-base);
+  letter-spacing: 0.02em;
+  gap: var(--space-sm);
+}
+
+.welcome-cta__arrow {
+  display: inline-block;
+  transition: transform var(--transition-bounce);
+}
+
+.welcome-cta:hover .welcome-cta__arrow {
+  transform: translateX(6px);
+}
+
+/* ---------- Nota al pie ---------- */
+.welcome-footnote {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin-top: var(--space-md);
+  opacity: 0.85;
+}
+
+/* ============================================================
+   FALLBACKS por si App.css no expone estas clases
+   ============================================================ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes zoomInRotate {
+  from { opacity: 0; transform: scale(0.85) rotate(-6deg); }
+  to   { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-fade-in     { animation: fadeIn 0.6s ease-out both; }
+.animate-fade-up     { animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-zoom-rotate { animation: zoomInRotate 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+.delay-1 { animation-delay: 0.15s; }
+.delay-2 { animation-delay: 0.30s; }
+.delay-3 { animation-delay: 0.45s; }
+.delay-4 { animation-delay: 0.60s; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .welcome-title {
+    font-size: var(--fs-3xl);
+  }
+
+  .welcome-subtitle {
+    font-size: var(--fs-base);
+  }
+
+  .Welcome-logo {
+    width: 180px;
+    height: 75px;
+  }
+
+  .welcome-orb {
+    filter: blur(60px);
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 400px) {
+  .welcome-title {
+    font-size: var(--fs-2xl);
+  }
+}
+
+/* ============================================================
+   ACCESIBILIDAD
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .welcome-orb,
+  .Welcome-logo-wrapper::before,
+  .welcome-title__accent,
+  .animate-fade-in,
+  .animate-fade-up,
+  .animate-zoom-rotate {
+    animation: none !important;
+    transition: none !important;
+  }
+}
