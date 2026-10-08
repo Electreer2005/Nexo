@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fa';
 import Logo from '../../assets/Logo.png';
 import './Auth.css';
+import { read, profileKey } from '../../studio/storage';
 
 export default function Login({ setUser }) {
   const [email, setEmail] = useState('');
@@ -19,10 +20,12 @@ export default function Login({ setUser }) {
     e.preventDefault();
 
     // Acceso simulado: cualquier correo válido y contraseña no vacía.
+    const profile = read(profileKey(email.trim()), {});
     setUser({
-      id: 'usuario-prueba',
+      id: email.trim().toLowerCase(),
       email: email.trim(),
-      name: 'Usuario de prueba',
+      name: typeof profile.name === 'string' ? profile.name : email.trim().split('@')[0],
+      bio: profile.bio || '', location: profile.location || '', discipline: profile.discipline || '',
     });
 
     navigate('/', { replace: true });
@@ -88,11 +91,7 @@ export default function Login({ setUser }) {
             </div>
           </div>
 
-          <div className="forgot-password">
-            <Link to="/forgot-password">
-              ¿Olvidaste tu contraseña?
-            </Link>
-          </div>
+          <p className="local-note">Acceso de prueba: usá un correo y una contraseña de ejemplo.</p>
 
           <button type="submit" className="btn btn--primary">
             Ingresar

@@ -125,7 +125,7 @@ export default function Explorar() {
       case 'popular':
         return copy.sort((a, b) => b.likes - a.likes);
       case 'random':
-        return copy.sort(() => Math.random() - 0.5);
+        return copy.sort((a, b) => a.id.localeCompare(b.id));
       case 'recent':
       default:
         return copy;
