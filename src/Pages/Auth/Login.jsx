@@ -20,9 +20,9 @@ export default function Login({ setUser }) {
 
     // Acceso simulado: cualquier correo válido y contraseña no vacía.
     setUser({
-      id: 'usuario-prueba',
+      id: email.trim().toLowerCase(),
       email: email.trim(),
-      name: 'Usuario de prueba',
+      name: email.trim().split('@')[0],
     });
 
     navigate('/', { replace: true });
@@ -88,11 +88,7 @@ export default function Login({ setUser }) {
             </div>
           </div>
 
-          <div className="forgot-password">
-            <Link to="/forgot-password">
-              ¿Olvidaste tu contraseña?
-            </Link>
-          </div>
+          <p className="local-note">Acceso de prueba: usá un correo y una contraseña de ejemplo.</p>
 
           <button type="submit" className="btn btn--primary">
             Ingresar

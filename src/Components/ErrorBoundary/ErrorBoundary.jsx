@@ -15,7 +15,6 @@ export default class ErrorBoundary extends Component {
 
   componentDidCatch(error, info) {
     // En producción, acá podés reportar a Sentry/LogRocket.
-    // eslint-disable-next-line no-console
     console.error('[ErrorBoundary]', error, info);
   }
 

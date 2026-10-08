@@ -22,9 +22,9 @@ export default function Register({ setUser }) {
 
         // Acceso simulado: cualquier correo válido y contraseña no vacía.
         setUser({
-            id: 'usuario-prueba',
+            id: email.trim().toLowerCase(),
             email: email.trim(),
-            name: 'Usuario de prueba',
+            name: name.trim() || email.trim().split('@')[0],
         });
 
         navigate('/', { replace: true });
@@ -48,7 +48,7 @@ export default function Register({ setUser }) {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="tu nombre"
-                                autoComplete="nombre"
+                                autoComplete="name"
                                 required
                                 className="input-form"
                             />
@@ -85,7 +85,7 @@ export default function Register({ setUser }) {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Contraseña"
-                                autoComplete="current-password"
+                                autoComplete="new-password"
                                 required
                                 className="input-form"
                             />
@@ -109,7 +109,7 @@ export default function Register({ setUser }) {
                     </div>
 
                     <button type="submit" className="btn btn--secondary">
-                        Ingresar
+                        Crear cuenta
                     </button>
 
                     <div className="RegisterLink">
