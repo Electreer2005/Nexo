@@ -1,0 +1,246 @@
+/* ============================================================
+   FAVORITOS.CSS
+   ============================================================ */
+
+.favoritos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.favoritos__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.favoritos__header-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* Corazón junto al título */
+.favoritos__header-heart {
+  display: inline-block;
+  margin-left: 10px;
+  color: var(--accent-rose);
+  font-size: 0.85em;
+  vertical-align: middle;
+  animation: softPulse 2.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.5));
+}
+
+.favoritos__subtitle {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+}
+
+/* ---------- Selector de orden ---------- */
+.favoritos__sort {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0 var(--space-md);
+  height: 42px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  transition: var(--transition-smooth);
+}
+
+.favoritos__sort:hover {
+  border-color: var(--border-color-hover);
+  color: var(--text-primary);
+}
+
+.favoritos__sort:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 4px var(--accent-glow);
+}
+
+.favoritos__sort > svg {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.favoritos__sort-select {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  padding-right: var(--space-md);
+  padding-right: 20px;
+  /* Flechita custom */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a8b5c9' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+
+.favoritos__sort-select option {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   EMPTY STATE — versión "premium" con corazones flotantes
+   ============================================================ */
+.favoritos__empty {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-md);
+  padding: var(--space-3xl) var(--space-xl);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  isolation: isolate;
+
+  background:
+    radial-gradient(circle at 50% 30%, rgba(236, 72, 153, 0.12), transparent 60%),
+    radial-gradient(circle at 50% 90%, rgba(99, 102, 241, 0.12), transparent 60%),
+    var(--bg-surface);
+
+  border: 1px solid var(--border-color);
+}
+
+/* Íconos de corazón grandes y difusos de fondo */
+.favoritos__empty-hearts {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.favoritos__empty-hearts svg {
+  position: absolute;
+  color: var(--accent-rose);
+  opacity: 0.08;
+}
+
+.favoritos__empty-hearts svg:nth-child(1) {
+  font-size: 180px;
+  top: -40px;
+  left: -40px;
+  transform: rotate(-15deg);
+  animation: floatSlow 8s ease-in-out infinite;
+}
+
+.favoritos__empty-hearts svg:nth-child(2) {
+  font-size: 120px;
+  bottom: -30px;
+  right: -20px;
+  transform: rotate(20deg);
+  opacity: 0.06;
+  animation: floatSlow 10s ease-in-out infinite reverse;
+}
+
+.favoritos__empty-hearts svg:nth-child(3) {
+  font-size: 90px;
+  top: 30%;
+  right: 15%;
+  opacity: 0.05;
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Ícono principal */
+.favoritos__empty-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: var(--radius-full);
+  display: grid;
+  place-items: center;
+  color: var(--accent-rose);
+  font-size: 2rem;
+
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(236, 72, 153, 0.2),
+    rgba(236, 72, 153, 0.05)
+  );
+  border: 1px solid rgba(236, 72, 153, 0.3);
+  box-shadow:
+    0 0 40px rgba(236, 72, 153, 0.2),
+    inset 0 0 20px rgba(236, 72, 153, 0.1);
+
+  animation: breathe 3.5s ease-in-out infinite;
+}
+
+.favoritos__empty-title {
+  font-family: var(--font-title);
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.favoritos__empty-text {
+  font-size: var(--fs-base);
+  color: var(--text-secondary);
+  max-width: 460px;
+  line-height: 1.6;
+}
+
+.favoritos__empty-actions {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: var(--space-sm);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .favoritos__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .favoritos__sort {
+    align-self: stretch;
+    justify-content: space-between;
+  }
+
+  .favoritos__empty {
+    padding: var(--space-2xl) var(--space-lg);
+  }
+
+  .favoritos__empty-title {
+    font-size: var(--fs-xl);
+  }
+
+  .favoritos__empty-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .favoritos__empty-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .favoritos__header-heart {
+    margin-left: 6px;
+  }
+}
