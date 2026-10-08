@@ -1,0 +1,265 @@
+/* ============================================================
+   LIGHTBOX.CSS
+   ============================================================ */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-lightbox, 9999);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  animation: fadeIn 0.25s ease-out both;
+}
+
+/* ---------- Fondo con blur ---------- */
+.lightbox__backdrop {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(40px) saturate(180%) brightness(0.35);
+  transform: scale(1.2); /* evita bordes blancos al difuminar */
+  z-index: -1;
+}
+
+.lightbox::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 15, 28, 0.75);
+  z-index: -1;
+}
+
+/* ---------- Botón cerrar ---------- */
+.lightbox__close {
+  position: absolute;
+  top: var(--space-lg);
+  right: var(--space-lg);
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: rgba(10, 15, 28, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: white;
+  font-size: var(--fs-base);
+  transition: var(--transition-bounce);
+  z-index: 10;
+}
+
+.lightbox__close:hover {
+  background: var(--accent-rose);
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 0 24px rgba(236, 72, 153, 0.5);
+}
+
+.lightbox__close:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 3px;
+}
+
+/* ---------- Contador ---------- */
+.lightbox__counter {
+  position: absolute;
+  top: calc(var(--space-lg) + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  background: rgba(10, 15, 28, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  z-index: 10;
+}
+
+.lightbox__counter span {
+  color: var(--text-muted);
+  margin: 0 2px;
+}
+
+/* ---------- Imagen ---------- */
+.lightbox__figure {
+  margin: 0;
+  max-width: min(1200px, 92vw);
+  max-height: 82vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.lightbox__image {
+  max-width: 100%;
+  max-height: 82vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* ---------- Navegación ---------- */
+.lightbox__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 54px;
+  height: 54px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: rgba(10, 15, 28, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: white;
+  font-size: var(--fs-lg);
+  transition: var(--transition-bounce);
+  z-index: 10;
+}
+
+.lightbox__nav:hover:not(:disabled) {
+  background: var(--accent-primary);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 0 28px var(--accent-glow-strong);
+}
+
+.lightbox__nav:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.lightbox__nav--prev { left: var(--space-lg); }
+.lightbox__nav--next { right: var(--space-lg); }
+
+/* ---------- Pie ---------- */
+.lightbox__footer {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-lg);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-full);
+  background: rgba(10, 15, 28, 0.75);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-card);
+  max-width: calc(100vw - 2 * var(--space-lg));
+  z-index: 10;
+}
+
+.lightbox__info {
+  min-width: 0;
+}
+
+.lightbox__title {
+  font-family: var(--font-title);
+  font-size: var(--fs-base);
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.01em;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 50vw;
+}
+
+.lightbox__meta {
+  font-size: var(--fs-xs);
+  color: var(--text-secondary);
+  text-transform: capitalize;
+  margin: 0;
+}
+
+.lightbox__like {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: white;
+  font-size: var(--fs-base);
+  transition: var(--transition-bounce);
+}
+
+.lightbox__like:hover {
+  background: var(--accent-rose);
+  transform: scale(1.12);
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+}
+
+.lightbox__like--active {
+  color: var(--accent-rose);
+  background: rgba(236, 72, 153, 0.15);
+  border-color: rgba(236, 72, 153, 0.4);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .lightbox {
+    padding: 0;
+  }
+
+  .lightbox__nav {
+    width: 42px;
+    height: 42px;
+    font-size: var(--fs-base);
+  }
+
+  .lightbox__nav--prev { left: var(--space-sm); }
+  .lightbox__nav--next { right: var(--space-sm); }
+
+  .lightbox__close {
+    top: var(--space-sm);
+    right: var(--space-sm);
+    width: 40px;
+    height: 40px;
+  }
+
+  .lightbox__counter {
+    top: var(--space-sm);
+    padding: 4px 10px;
+    font-size: var(--fs-xs);
+  }
+
+  .lightbox__footer {
+    bottom: var(--space-sm);
+    padding: var(--space-xs) var(--space-md);
+    gap: var(--space-md);
+  }
+
+  .lightbox__title {
+    max-width: 60vw;
+    font-size: var(--fs-sm);
+  }
+
+  .lightbox__like {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .lightbox,
+  .lightbox__image {
+    animation: none !important;
+  }
+}
