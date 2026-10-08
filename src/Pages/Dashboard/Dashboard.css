@@ -1,0 +1,153 @@
+/* ============================================================
+   DASHBOARD.CSS
+   Extiende App.css, no repite nada de lo que ya está ahí.
+   ============================================================ */
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+}
+
+/* ============================================================
+   STAT CARD — mejoras sobre .stat-card de App.css
+   ============================================================ */
+/* Ícono pequeño de tendencia */
+.stat-card__trend svg {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+
+/* En desktop, más aire */
+.stat-card {
+  padding: var(--space-lg) var(--space-lg) var(--space-md);
+}
+
+.stat-card__value {
+  font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem);
+}
+
+/* ============================================================
+   ÁLBUMES — cuando hay 4 y son pares, mejor grid fijo
+   ============================================================ */
+@media (min-width: 1025px) {
+  .grid--albums {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+}
+
+/* ============================================================
+   FOTOS RECIENTES
+   ============================================================ */
+.grid--photos .photo-tile {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Mejor hover en mobile (touch): animación sutil */
+@media (hover: none) {
+  .photo-tile__overlay {
+    opacity: 1;
+    background: linear-gradient(
+      180deg,
+      transparent 55%,
+      rgba(10, 15, 28, 0.85) 100%
+    );
+  }
+  .photo-tile__title {
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   CTA FINAL
+   ============================================================ */
+.dashboard__cta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xl);
+  padding: var(--space-2xl);
+  margin-top: var(--space-lg);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  isolation: isolate;
+
+  background:
+    radial-gradient(circle at 100% 0%, rgba(99, 102, 241, 0.25), transparent 55%),
+    radial-gradient(circle at 0% 100%, rgba(236, 72, 153, 0.18), transparent 55%),
+    var(--bg-surface);
+
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-card);
+}
+
+/* Borde superior animado */
+.dashboard__cta::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: var(--gradient-primary);
+  background-size: 200% 200%;
+  opacity: 0.7;
+  animation: gradientShift 4s ease infinite;
+}
+
+.dashboard__cta-content {
+  position: relative;
+  z-index: 1;
+  max-width: 60%;
+}
+
+.dashboard__cta-title {
+  font-family: var(--font-title);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-xs);
+  color: var(--text-primary);
+}
+
+.dashboard__cta-text {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  max-width: 480px;
+}
+
+.dashboard__cta .btn {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .dashboard__cta {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    padding: var(--space-xl);
+  }
+
+  .dashboard__cta-content {
+    max-width: 100%;
+  }
+
+  .dashboard__cta .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    gap: var(--space-xl);
+  }
+}
