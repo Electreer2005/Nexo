@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Edu+QLD+Hand:wght@400..700&display=swap');
+
+:root {
+  /* ==================== FONDOS Y ESTRUCTURA ==================== */
+  --bg-main: #0a0f1c;           /* Azul noche profundo, más dramático */
+  --bg-main-alt: #0f172a;       /* Alternativa para secciones */
+  --bg-surface: #1a2332;        /* Tarjetas y paneles */
+  --bg-surface-hover: #253044;  /* Hover de tarjetas */
+  --bg-elevated: #212c40;       /* Modales y overlays */
+  --bg-glass: rgba(26, 35, 50, 0.65); /* Glassmorphism */
+
+  /* ==================== TEXTOS Y CONTRASTE ==================== */
+  --text-primary: #f8fafc;
+  --text-secondary: #a8b5c9;
+  --text-muted: #64748b;
+  --text-inverse: #0a0f1c;
+
+  /* ==================== COLORES DE ACENTO ==================== */
+  /* Índigo principal */
+  --accent-primary: #6265ff;
+  --accent-secondary: #00039d;
+  --accent-hover: #4f46e5;
+  --accent-soft: #818cf8;
+  --accent-glow: rgba(99, 102, 241, 0.35);
+  --accent-glow-strong: rgba(99, 102, 241, 0.6);
+
+  /* Acentos secundarios inspirados en paisajes */
+  --accent-sunset: #f97316;     /* Atardecer */
+  --accent-aurora: #14b8a6;     /* Aurora boreal */
+  --accent-rose: #ec4899;       /* Rosa alpino */
+  --accent-amber: #fbbf24;      /* Dorado atardecer */
+  --accent-sky: #0ea5e9;        /* Cielo */
+  --accent-forest: #22c55e;     /* Bosque */
+
+  /* Gradientes de marca */
+  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+  --gradient-secondary: linear-gradient(135deg, #0307ff 0%, #453173 50%, #ec4899 100%);
+  --gradient-sunset: linear-gradient(135deg, #f97316 0%, #ec4899 100%);
+  --gradient-aurora: linear-gradient(135deg, #14b8a6 0%, #6366f1 100%);
+  --gradient-overlay: linear-gradient(180deg, transparent 0%, rgba(10, 15, 28, 0.95) 100%);
+  --gradient-overlay-soft: linear-gradient(180deg, transparent 40%, rgba(10, 15, 28, 0.85) 100%);
+
+  /* ==================== BORDES Y SOMBRAS ==================== */
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-color-hover: rgba(255, 255, 255, 0.18);
+  --border-accent: rgba(99, 102, 241, 0.35);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 25px 40px -10px rgba(0, 0, 0, 0.7), 0 0 20px var(--accent-glow);
+  --shadow-glow: 0 0 30px var(--accent-glow-strong);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  /* ==================== TIPOGRAFÍA ==================== */
+  --font-title: "Plus Jakarta Sans", sans-serif;
+  --font-body: "Roboto", sans-serif;
+  --font-elegant: "Edu QLD Hand", cursive; /* Para títulos de álbumes */
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.5rem;
+  --fs-2xl: 2rem;
+  --fs-3xl: 2.75rem;
+  --fs-4xl: 3.5rem;
+
+  /* ==================== ESPACIADO ==================== */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* ==================== TRANSICIONES ==================== */
+  --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --transition-ease-out: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ==================== Z-INDEX ==================== */
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 500;
+  --z-toast: 1000;
+  --z-lightbox: 9999;
+
+  /* ==================== LAYOUT ==================== */
+  --header-height: 72px;
+  --sidebar-width: 260px;
+  --max-content: 1440px;
+}
+
