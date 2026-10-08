@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './Pages/Auth/Login';
 import Register from './Pages/Auth/Register';
-import Studio, { Welcome } from './studio/Studio';
+import Studio from './studio/Studio';
+import Welcome from './studio/pages/Welcome';
+import './studio/studio.css';
 import ErrorBoundary from './Components/ErrorBoundary/ErrorBoundary';
 
 function App() {
@@ -16,7 +18,7 @@ function App() {
     catch { /* La sesión de prueba puede mantenerse en memoria. */ }
     setUser(valid);
   }
-  return <BrowserRouter><ErrorBoundary>{user ? <Studio user={user} setUser={updateUser} /> : <Routes>
+  return <BrowserRouter><ErrorBoundary>{user ? <Studio key={user.email.toLowerCase()} user={user} setUser={updateUser} /> : <Routes>
     <Route path="/" element={<Welcome />} />
     <Route path="/login" element={<Login setUser={updateUser} />} />
     <Route path="/register" element={<Register setUser={updateUser} />} />

@@ -19,7 +19,11 @@ npm run build
 - Descubrimiento de series por disciplina, autor, título, ubicación y etiquetas.
 - Guardados persistentes y compartidos entre pantallas, separados por correo de prueba.
 - Portfolios de autor, detalle de serie y visor accesible con Escape y foco modal.
-- Creación de series con hasta 12 fotos JPG, PNG o WebP, eliminación y descarga de copias locales.
+- Creación y edición de series con hasta 12 fotos JPG, PNG o WebP: títulos de imágenes, orden, portada, eliminación y descarga de copias locales.
+- Perfil editable con biografía, ubicación y especialidad, persistente por correo de prueba.
+- Ajustes con exportación JSON y restauración validada: incorpora series nuevas sin reemplazar las que ya existen.
+- Guías y ejercicios de luz, composición y selección de series. Contenido fijo, sin IA ni evaluación de fotos.
+- Menú de cuenta que se cierra con Escape o al tocar afuera.
 - Optimización de imágenes a un máximo de 1200 píxeles por lado mayor y JPEG. No conserva originales ni metadatos EXIF.
 - Diseño móvil, navegación de teclado y ruta 404.
 
@@ -33,6 +37,6 @@ Las series, nombres de autores y portfolios iniciales son ejemplos. Algunas imá
 
 ## Estructura activa
 
-`src/App.jsx` maneja la sesión de prueba. `src/studio/Studio.jsx`, `data.js` y `studio.css` contienen la nueva experiencia editorial. Las páginas anteriores permanecen en el repositorio como referencia, pero no forman parte de las rutas activas, salvo Login y Register.
+`src/App.jsx` maneja la sesión de prueba. `src/studio/Studio.jsx` conecta las rutas y el archivo local. `src/studio/components/` contiene navegación, filtros, tarjetas, estados vacíos, visor y subida de fotos. `src/studio/pages/` contiene las pantallas activas. `archive.js` valida las copias importadas. `data.js` y `studio.css` definen el catálogo de ejemplo y el diseño editorial. Las páginas anteriores permanecen en el repositorio como referencia, pero no forman parte de las rutas activas, salvo Login y Register.
 
 Antes del lanzamiento: integrar autenticación, almacenamiento remoto, autorización por propietario e invitación, moderación y copias de seguridad.

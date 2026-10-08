@@ -104,3 +104,24 @@ body { margin:0; background:var(--studio-bg); color:var(--studio-ink); font-fami
 @media(max-width:900px) { .studio-header { flex-wrap:wrap; gap:15px; padding:18px 5vw 0; } .studio-header nav { order:4; width:100%; justify-content:space-between; gap:15px; } .studio-header nav a { padding:16px 0; } .header-create { margin-left:auto; } .work-grid { grid-template-columns:repeat(2,1fr); } .work-image { height:300px; } .collection-tools { align-items:flex-start; flex-direction:column; gap:0; } .category-tabs { width:100%; } .detail-heading { align-items:flex-start; flex-direction:column; } .studio-welcome { grid-template-columns:1fr; } .welcome-photo { min-height:35svh; } .welcome-copy { padding:40px 8%; } .welcome-copy .wordmark { margin-bottom:30px; } }
 @media(max-width:560px) { .studio-main { padding:35px 6vw 60px; } .wordmark { font-size:30px; } .header-create span { display:none; } .studio-header nav a { font-size:11px; } .work-grid { grid-template-columns:1fr; gap:35px; } .work-image { height:110vw; max-height:480px; } .category-tabs { gap:22px; } .page-intro { margin-bottom:30px; } .page-intro h1 { font-size:49px; } .studio-footer { flex-direction:column; } .detail-grid, .portfolio-grid, .form-columns { grid-template-columns:1fr; } .upload-preview { grid-template-columns:repeat(2,1fr); } .welcome-copy h1 { font-size:58px; } }
 @media(prefers-reduced-motion:reduce) { .studio-shell *, .studio-welcome * { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
+.account-menu { position:relative; }
+.account-trigger { display:grid; place-items:center; width:36px; height:36px; border:1px solid var(--studio-line); border-radius:50%; color:var(--studio-ink); background:transparent; }
+.account-panel { position:absolute; right:0; top:48px; width:240px; padding:15px; border:1px solid var(--studio-line); background:var(--studio-surface); z-index:20; box-shadow:0 15px 30px #0005; }
+.account-panel strong { display:block; padding:8px; font-size:12px; overflow-wrap:anywhere; border-bottom:1px solid var(--studio-line); margin-bottom:8px; }
+.account-panel a, .account-panel button { display:flex; align-items:center; gap:12px; width:100%; padding:12px 8px; background:none; border:0; color:var(--studio-ink); font-size:12px; text-align:left; }
+.account-panel a:hover, .account-panel button:hover { background:var(--studio-bg); }
+.settings-grid, .lesson-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; }
+.info-panel { border:1px solid var(--studio-line); padding:28px; }
+.info-panel h2 { font:400 32px 'Libre Caslon Display',Georgia,serif; margin:15px 0; }
+.info-panel p, .lesson > p { color:var(--studio-muted); font-size:14px; line-height:1.9; overflow-wrap:anywhere; }
+.import-label { display:flex; flex-direction:column; gap:12px; font-size:12px; margin-top:25px; }
+.import-label input { max-width:100%; }
+.lesson { max-width:760px; }
+.lesson .info-panel { margin-top:40px; }
+.lesson-card:hover { border-color:var(--studio-accent); }
+.profile-bio { max-width:600px; white-space:pre-wrap; line-height:1.8; }
+.preview-controls { position:absolute; top:4px; right:4px; display:flex; gap:4px; }
+.upload-preview .preview-controls button { position:static; }
+.upload-preview label { margin-top:10px; font-size:10px; }
+.upload-preview label input { padding:7px !important; font-size:11px; }
+@media(max-width:1000px) { .settings-grid, .lesson-grid { grid-template-columns:1fr; } }
