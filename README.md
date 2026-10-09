@@ -33,10 +33,19 @@ El acceso acepta cualquier correo válido y contraseña no vacía. No verifica i
 
 Las series nuevas se guardan únicamente en localStorage, como archivos privados locales. Borrar los datos del navegador elimina las series. El almacenamiento es limitado; la interfaz informa si no puede guardar. Para material importante conservá siempre los originales fuera de la app.
 
-Las series, nombres de autores y portfolios iniciales son ejemplos. Algunas imágenes de demostración vienen de Unsplash y requieren internet. Las publicaciones, invitaciones, visibilidad remota y moderación no están implementadas. El enlace de las series de ejemplo funciona solo si el destinatario entra al acceso de prueba; las series locales no se comparten por enlace.
+Las series, nombres de autores y portfolios iniciales son ejemplos. Las imágenes de demostración se incluyen en el proyecto en WebP, con portadas de hasta 960 px y vistas ampliadas de 2400 px de ancho; no requieren conexión a Unsplash. Los créditos reales aparecen en cada imagen. Las publicaciones, invitaciones, visibilidad remota y moderación no están implementadas. El enlace de las series de ejemplo funciona solo si el destinatario entra al acceso de prueba; las series locales no se comparten por enlace.
 
 ## Estructura activa
 
 `src/App.jsx` maneja la sesión de prueba. `src/studio/Studio.jsx` conecta las rutas y el archivo local. `src/studio/components/` contiene navegación, filtros, tarjetas, estados vacíos, visor y subida de fotos. `src/studio/pages/` contiene las pantallas activas. `archive.js` valida las copias importadas. `data.js` y `studio.css` definen el catálogo de ejemplo y el diseño editorial. Las páginas anteriores permanecen en el repositorio como referencia, pero no forman parte de las rutas activas, salvo Login y Register.
 
 Antes del lanzamiento: integrar autenticación, almacenamiento remoto, autorización por propietario e invitación, moderación y copias de seguridad.
+
+## Créditos fotográficos
+
+Selección de demostración; los nombres de perfiles y títulos de series son ficticios. Fotografías descargadas de Unsplash y convertidas a WebP:
+
+- Fitz Roy: [Marina Zvada](https://unsplash.com/photos/i5W6KLe8w1Y).
+- Arquitectura en Oslo: [Damon Zaidmus](https://unsplash.com/photos/h6d3NwoOeuw).
+- Dalia: [Annie Spratt](https://unsplash.com/photos/TDbWFtSscJY).
+- [Licencia Unsplash](https://unsplash.com/license).
