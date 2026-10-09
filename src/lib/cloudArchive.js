@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getFirestore, onSnapshot, runTransaction, serverTimestamp, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, deleteDoc, getFirestore, onSnapshot, runTransaction, serverTimestamp, setDoc } from 'firebase/firestore';
 import { deleteObject, getBlob, getStorage, ref, uploadString } from 'firebase/storage';
 import { app } from './firebase';
 const getDatabase = async () => getFirestore(app);
@@ -39,7 +39,7 @@ export async function saveAlbum(uid, album, previous, onProgress = () => {}) {
       photos.push({ id:photo.id, title:photo.title.slice(0,100), path });
       onProgress(`Preparando foto ${i+1} de ${album.photos.length}…`);
     }
-    const record = { ownerId:uid, title:album.title, description:album.description, discipline:album.discipline, location:album.location, tags:album.tags, date:album.date, visibility:'private', photos, revision:(previous?.revision || 0)+1, updatedAt:serverTimestamp() };
+    const record = { shareKey:previous?.shareKey || crypto.randomUUID(), ownerId:uid, title:album.title, description:album.description, discipline:album.discipline, location:album.location, tags:album.tags, date:album.date, visibility:'private', photos, revision:(previous?.revision || 0)+1, updatedAt:serverTimestamp() };
     committing = true;
     await runTransaction(db, async transaction => {
       const target = doc(db,'users',uid,'albums',album.id); const current = await transaction.get(target);
@@ -57,6 +57,8 @@ export async function saveAlbum(uid, album, previous, onProgress = () => {}) {
 }
 export async function deleteAlbum(uid, album) {
   const db = await getDatabase(); const storage = await getPhotoStorage();
+  const invitations = await getDocs(collection(db,'users',uid,'albums',safeId(album.id),'albumInvitations'));
+  await Promise.all(invitations.docs.map(item => deleteDoc(item.ref)));
   await runTransaction(db, async transaction => {
     const target = doc(db,'users',uid,'albums',safeId(album.id)); const current = await transaction.get(target);
     if (!current.exists()) return;

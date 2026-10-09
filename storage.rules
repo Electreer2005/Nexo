@@ -3,7 +3,14 @@ service firebase.storage {
   match /b/{bucket}/o {
     match /users/{uid}/albums/{albumId}/{fileName} {
       function owner() { return request.auth != null && request.auth.uid == uid; }
-      allow read, delete: if owner();
+      function invited() {
+        let email = request.auth.token.email.lower();
+        return request.auth != null && request.auth.token.email_verified == true
+          && firestore.get(/databases/(default)/documents/users/$(uid)/albums/$(albumId)/albumInvitations/$(email)).data.shareKey
+            == firestore.get(/databases/(default)/documents/users/$(uid)/albums/$(albumId)).data.shareKey;
+      }
+      allow read: if owner() || invited();
+      allow delete: if owner();
       allow create: if owner() && resource == null && request.resource.size < 5 * 1024 * 1024 && request.resource.contentType.matches('image/(jpeg|png|webp)');
       allow update: if false;
     }

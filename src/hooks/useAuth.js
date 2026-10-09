@@ -7,7 +7,7 @@ import { read, profileKey } from '../studio/storage';
 function account(firebaseUser) {
   if (!firebaseUser) return null;
   const local = read(profileKey(firebaseUser.email || firebaseUser.uid), {});
-  return { id:firebaseUser.uid, uid:firebaseUser.uid, email:firebaseUser.email || '', name:firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Artista', bio:local.bio || '', location:local.location || '', discipline:local.discipline || '' };
+  return { id:firebaseUser.uid, uid:firebaseUser.uid, emailVerified:firebaseUser.emailVerified, email:firebaseUser.email || '', name:firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'Artista', bio:local.bio || '', location:local.location || '', discipline:local.discipline || '' };
 }
 export default function useAuth() {
   const [user, setUser] = useState(null);
