@@ -12,6 +12,3 @@ const firebaseConfig = {
 
 export const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-// Estos servicios se cargan cuando empiece la migración del archivo remoto.
-export async function getDatabase() { const { getFirestore } = await import('firebase/firestore'); return getFirestore(app); }
-export async function getPhotoStorage() { const { getStorage } = await import('firebase/storage'); return getStorage(app); }
