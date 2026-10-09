@@ -13,7 +13,15 @@ export default function useAuth() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  useEffect(() => onAuthStateChanged(auth, current => { setUser(account(current)); setLoading(false); }, err => { setError(authErrorMessage(err)); setLoading(false); }), []);
+  useEffect(() => {
+    let generation=0;let active=true;
+    const stop=onAuthStateChanged(auth, async current => {
+      const own=++generation;const base=account(current);setUser(base);setLoading(false);
+      if(current) try { const {readRemoteProfile}=await import('../lib/cloudArchive');const profile=await readRemoteProfile(current.uid);if(active&&own===generation)setUser({...base,...profile,name:auth.currentUser?.displayName || profile.name || base.name,uid:current.uid,id:current.uid,email:current.email}); }
+      catch { if(active&&own===generation)setError('No se pudo cargar el perfil de Firestore. Revisá configuración y permisos.'); }
+    },err=>{setError(authErrorMessage(err));setLoading(false);});
+    return()=>{active=false;stop();};
+  }, []);
   async function login(email, password) { const result = await signInWithEmailAndPassword(auth, email.trim(), password); setUser(account(result.user)); }
   async function register(name, email, password) {
     const result = await createUserWithEmailAndPassword(auth, email.trim(), password);
@@ -25,8 +33,9 @@ export default function useAuth() {
     if (!next) { await signOut(auth); setUser(null); return; }
     if (!auth.currentUser) throw new Error('La sesión expiró.');
     await updateProfile(auth.currentUser, { displayName:next.name });
-    localStorage.setItem(profileKey(user.email), JSON.stringify(next));
-    setUser(account(auth.currentUser));
+    const {saveRemoteProfile}=await import('../lib/cloudArchive');
+    await saveRemoteProfile(user.uid,next);
+    setUser({...account(auth.currentUser),bio:next.bio,location:next.location,discipline:next.discipline});
   }
   return { user, loading, error, login, register, updateUser };
 }

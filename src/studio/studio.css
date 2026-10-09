@@ -187,3 +187,4 @@ body { margin:0; background:var(--studio-bg); color:var(--studio-ink); font-fami
 @media(max-width:560px) { .studio-header nav a { padding:10px 8px; } .archive-toolbar { padding:6px 14px 12px; } .category-tabs { gap:20px; } .work-image { height:100vw; max-height:420px; } .work-caption { padding:17px 20px; } .studio-form { padding:20px; } .collection-heading .page-intro h1 { font-size:48px; } .collection-search input { font-size:12px; } }
 .session-loader { min-height:100svh; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:20px; color:var(--studio-muted); font-size:13px; }
 .auth-global-error { padding:14px 5vw; background:#40262a; color:#ffd2d2; font-size:13px; }
+.cloud-error { margin:20px 0; padding:20px; border:1px solid #dfaaa655; border-radius:10px; color:#ffd2d2; font-size:13px; }

@@ -1,61 +1,73 @@
 # Nexo
 
-Un archivo visual para fotógrafos y artistas, construido con React y Vite. Firebase Authentication gestiona las cuentas. Los álbumes, guardados y datos extendidos del perfil todavía se almacenan localmente.
+Archivo visual para fotógrafos y artistas, con React, Vite y Firebase. El acceso usa Authentication; las series y perfiles usan Firestore, y las fotos usan Storage. Las series del catálogo inicial son ejemplos.
 
 ## Desarrollo
 
 ```sh
 npm ci
 npm run dev
-```
-
-```sh
 npm run lint
+npm run test
 npm run build
 ```
 
-## Funciones
+## Activar el proyecto Firebase
 
-- Descubrimiento de series por disciplina, autor, título, ubicación y etiquetas.
-- Guardados persistentes y compartidos entre pantallas, separados por correo de la cuenta.
-- Portfolios de autor, detalle de serie y visor accesible con Escape y foco modal.
-- Creación y edición de series con hasta 12 fotos JPG, PNG o WebP: títulos de imágenes, orden, portada, eliminación y descarga de copias locales.
-- Perfil editable con biografía, ubicación y especialidad, con nombre en Firebase y datos extendidos locales.
-- Ajustes con exportación JSON y restauración validada: incorpora series nuevas sin reemplazar las que ya existen.
-- Guías y ejercicios de luz, composición y selección de series. Contenido fijo, sin IA ni evaluación de fotos.
-- Menú de cuenta que se cierra con Escape o al tocar afuera.
-- Optimización de imágenes a un máximo de 1200 píxeles por lado mayor y JPEG. No conserva originales ni metadatos EXIF.
-- Diseño móvil, navegación de teclado y ruta 404.
+1. En el proyecto `nexo-9d725`, habilitar Authentication → Correo electrónico/contraseña y autorizar `localhost` y el dominio del despliegue.
+2. Crear Cloud Firestore y activar Storage. Revisar en Firebase los requisitos de facturación de Storage antes de habilitarlo.
+3. Publicar `firestore.rules` en Firestore → Rules y `storage.rules` en Storage → Rules. También pueden publicarse con Firebase CLI:
 
-## Límites del prototipo
+```sh
+npx firebase-tools deploy --only firestore:rules,storage --project nexo-9d725
+```
 
-El acceso usa Firebase Authentication con correo y contraseña. La sesión se restaura con onAuthStateChanged; el antiguo nexo:user ya no concede acceso. El archivo local sigue siendo accesible para alguien con acceso al navegador y no es almacenamiento remoto protegido.
+4. Para cargar imágenes por acceso autenticado, configurar CORS del bucket. `storage.cors.json` incluye localhost; agregar el origen HTTPS de Vercel o el dominio propio. Aplicar con Google Cloud CLI:
 
-Las series nuevas se guardan únicamente en localStorage, como archivos privados locales. Borrar los datos del navegador elimina las series. El almacenamiento es limitado; la interfaz informa si no puede guardar. Para material importante conservá siempre los originales fuera de la app.
+```sh
+gcloud storage buckets update gs://nexo-9d725.firebasestorage.app --cors-file=storage.cors.json
+```
 
-Las series, nombres de autores y portfolios iniciales son ejemplos. Las imágenes de demostración se incluyen en el proyecto en WebP, con portadas de hasta 960 px y vistas ampliadas de 2400 px de ancho; no requieren conexión a Unsplash. Los créditos reales aparecen en cada imagen. Las publicaciones, invitaciones, visibilidad remota y moderación no están implementadas. El enlace de las series de ejemplo funciona solo si el destinatario inicia sesión; las series locales no se comparten por enlace.
+La app muestra errores si los servicios o permisos no están preparados. Ninguna regla se publica automáticamente con el PR. Analytics no se inicializa.
 
-## Estructura activa
+## Archivo privado
 
-`src/App.jsx` maneja la sesión de prueba. `src/studio/Studio.jsx` conecta las rutas y el archivo local. `src/studio/components/` contiene navegación, filtros, tarjetas, estados vacíos, visor y subida de fotos. `src/studio/pages/` contiene las pantallas activas. `archive.js` valida las copias importadas. `data.js` y `studio.css` definen el catálogo de ejemplo y el diseño editorial. Las páginas anteriores permanecen en el repositorio como referencia, pero no forman parte de las rutas activas, salvo Login y Register.
+- Series: `users/{uid}/albums/{id}`. Metadatos y rutas de fotos, sin base64 ni enlaces públicos en documentos.
+- Fotos: `users/{uid}/albums/{id}/{archivo}`. Carga y lectura autenticadas; las imágenes se muestran con URLs de objeto temporales que se liberan al desmontar el componente.
+- Perfil: `users/{uid}`. Nombre, biografía, ubicación y especialidad.
+- Guardados: `users/{uid}/preferences/saved`.
 
-Antes del lanzamiento: completar almacenamiento remoto, autorización por propietario e invitación, moderación y copias de seguridad.
+Cada cuenta solo puede acceder a sus rutas. La publicación y las invitaciones todavía no están implementadas. No se usan URLs con token de descarga como enlaces para compartir.
+
+La edición y eliminación usan transacciones con revisión para detectar cambios simultáneos. Las nuevas imágenes usan nombres únicos. Si falla una subida antes de escribir metadatos, se intenta limpiar lo subido. Si se pierde la respuesta de una escritura, se conservan los archivos para evitar borrar imágenes que podrían haberse guardado. La limpieza tras una eliminación o edición puede requerir intervención si falla: Firestore y Storage no ofrecen una transacción conjunta. Antes de producción se necesita una tarea de limpieza de objetos huérfanos.
+
+## Fotos e importación
+
+La app admite hasta 12 fotos JPG, PNG o WebP por serie. Optimiza a 1200 px de lado mayor y JPEG; no conserva originales ni EXIF. Storage limita cada archivo a menos de 5 MB.
+
+Ajustes permite descargar una copia JSON con las imágenes, restaurarla o importar las series antiguas de localStorage. Las series ya presentes no se reemplazan, y las copias locales se conservan. Si una importación falla parcialmente, las series ya completadas permanecen y el reintento salta esos identificadores. Una copia JSON puede pesar bastante y contener fotos privadas: guardala en un lugar adecuado.
+
+## Pruebas
+
+`npm run test` verifica subidas, rutas, revisiones, guardados, compensación de errores y eliminación con dependencias Firebase simuladas.
+
+Para probar reglas sin tocar datos reales, iniciar los emuladores y ejecutar:
+
+```sh
+npx firebase-tools@13.35.1 emulators:exec --project demo-nexo --only firestore,storage "npm run test:rules"
+```
+
+Las pruebas verifican aislamiento entre usuarios, rechazo anónimo, revisiones, visibilidad privada, tipos de archivo, tamaño y prohibición de sobrescritura. Requiere Java compatible con la versión del emulador. La prueba real entre dos cuentas y dispositivos se realiza después de activar servicios, reglas y CORS en el proyecto.
+
+## Estructura
+
+`src/App.jsx` y `src/hooks/useAuth.js` manejan acceso. `src/lib/cloudArchive.js` conecta Firestore y Storage. `src/hooks/useCloudArchive.js` mantiene las series y guardados por suscripción. `src/studio/components/` y `src/studio/pages/` contienen la experiencia activa. Las pantallas anteriores quedan como referencia y no participan de las rutas actuales, salvo las de Auth.
 
 ## Créditos fotográficos
 
-Selección de demostración; los nombres de perfiles y títulos de series son ficticios. Fotografías descargadas de Unsplash y convertidas a WebP:
+Selección de demostración en WebP, con vistas de 2400 px de ancho y portadas de hasta 960 px. Perfiles y títulos de series ficticios; los créditos reales aparecen junto a las fotos.
 
 - Fitz Roy: [Marina Zvada](https://unsplash.com/photos/i5W6KLe8w1Y).
-- Arquitectura en Oslo: [Damon Zaidmus](https://unsplash.com/photos/h6d3NwoOeuw).
+- Arquitectura de Oslo: [Damon Zaidmus](https://unsplash.com/photos/h6d3NwoOeuw).
 - Dalia: [Annie Spratt](https://unsplash.com/photos/TDbWFtSscJY).
 - [Licencia Unsplash](https://unsplash.com/license).
-
-## Activar Firebase Authentication
-
-1. En [Firebase Console](https://console.firebase.google.com/project/nexo-9d725/authentication/providers), abrir Authentication y habilitar el proveedor Correo electrónico/contraseña.
-2. Revisar Authentication → Settings → Authorized domains: incluir localhost para desarrollo y el dominio de Vercel o el dominio propio que use la app.
-3. Probar registro, logout, acceso y recuperación de contraseña con una cuenta propia.
-
-La recuperación usa el enlace de Firebase y su página alojada para elegir una nueva contraseña. No se usa una pantalla de reset local. El nombre se guarda con updateProfile; biografía, ubicación y especialidad permanecen locales. Analytics no se inicializa en esta etapa.
-
-`src/lib/firebase.js` contiene la configuración pública de la app web; no contiene credenciales administrativas. Los accesos a Firestore y Storage se preparan con carga diferida, pero todavía no se suben fotos ni se escriben documentos. Se deben definir y probar reglas de acceso antes de esa migración.
