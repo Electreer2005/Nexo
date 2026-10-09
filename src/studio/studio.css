@@ -125,3 +125,5 @@ body { margin:0; background:var(--studio-bg); color:var(--studio-ink); font-fami
 .upload-preview label { margin-top:10px; font-size:10px; }
 .upload-preview label input { padding:7px !important; font-size:11px; }
 @media(max-width:1000px) { .settings-grid, .lesson-grid { grid-template-columns:1fr; } }
+.photo-credit { display:block; margin-top:6px; color:var(--studio-muted) !important; font-size:10px; }
+.photo-credit:hover { text-decoration:underline; }
