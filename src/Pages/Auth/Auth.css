@@ -13,3 +13,6 @@
 .RegisterText a { color:#a5afff; text-decoration:none; }
 .Auth-container :focus-visible { outline:2px solid #a5afff; outline-offset:4px; }
 @media(max-width:480px) { .Login-container, .Register-container { padding:28px 22px; } }
+.Auth-container .form-error { color:#ffb5b5; font-size:13px; line-height:1.6; }
+.Auth-container button:disabled { opacity:.55; cursor:wait; }
+.Auth-container .text-link { color:var(--studio-ink); }

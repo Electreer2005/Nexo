@@ -8,27 +8,22 @@ import {
 } from 'react-icons/fa';
 import Logo from '../../assets/Logo.png';
 import './Auth.css';
-import { read, profileKey } from '../../studio/storage';
+import { authErrorMessage } from '../../lib/authErrors';
 
-export default function Login({ setUser }) {
+export default function Login({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    // Acceso simulado: cualquier correo válido y contraseña no vacía.
-    const profile = read(profileKey(email.trim()), {});
-    setUser({
-      id: email.trim().toLowerCase(),
-      email: email.trim(),
-      name: typeof profile.name === 'string' ? profile.name : email.trim().split('@')[0],
-      bio: profile.bio || '', location: profile.location || '', discipline: profile.discipline || '',
-    });
-
-    navigate('/', { replace: true });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  async function handleSubmit(e) {
+    e.preventDefault(); if (loading) return;
+    setLoading(true); setError('');
+    try { await onLogin(email, password); navigate('/', { replace:true }); }
+    catch (err) { setError(authErrorMessage(err)); }
+    finally { setLoading(false); }
   }
 
   return (
@@ -91,10 +86,11 @@ export default function Login({ setUser }) {
             </div>
           </div>
 
-          <p className="local-note">Acceso de prueba: usá un correo y una contraseña de ejemplo.</p>
+          <Link className="text-link" to="/forgot-password">¿Olvidaste tu contraseña?</Link>
+          {error && <p className="form-error" role="alert">{error}</p>}
 
-          <button type="submit" className="btn btn--primary">
-            Ingresar
+          <button type="submit" disabled={loading} className="btn btn--primary">
+            {loading ? "Ingresando…" : "Ingresar"}
           </button>
 
           <div className="RegisterLink">

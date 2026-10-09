@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { collections } from './data';
-import { read, profileKey } from './storage';
+import { read } from './storage';
 import { validateArchive } from './archive';
 import StudioHeader from './components/StudioHeader';
 import StudioFooter from './components/StudioFooter';
@@ -23,7 +23,8 @@ export default function Studio({ user, setUser }) {
   function save(id) { const next = saved.includes(id) ? saved.filter(v => v !== id) : [...saved, id]; try { localStorage.setItem(savedKey, JSON.stringify(next)); setSaved(next); } catch { setNotice('No se pudo guardar el favorito en este navegador.'); } }
   function create(album) { const next = [album, ...localAlbums]; localStorage.setItem(key, JSON.stringify(next)); setLocalAlbums(next); }
   function update(album) { const next = localAlbums.map(a => a.id === album.id ? album : a); localStorage.setItem(key, JSON.stringify(next)); setLocalAlbums(next); }
-  function updateProfile(next) { localStorage.setItem(profileKey(user.email), JSON.stringify(next)); setUser(next); }
+  async function updateProfile(next) { await setUser(next); }
+  async function logout() { try { await setUser(null); } catch { setNotice('No se pudo cerrar la sesión. Volvé a intentar.'); } }
   function importArchive(data) {
     const archive = validateArchive(data);
     if (archive.albums.some(a => collections.some(item => item.id === a.id))) throw new Error("La copia contiene identificadores reservados para las series de ejemplo.");
@@ -35,5 +36,5 @@ export default function Studio({ user, setUser }) {
     setLocalAlbums(next); setSaved(nextSaved);
   }
   function remove(id) { try { const next = localAlbums.filter(a => a.id !== id); localStorage.setItem(key, JSON.stringify(next)); setLocalAlbums(next); return true; } catch { setNotice('No se pudo eliminar la serie.'); return false; } }
-  return <div className="studio-shell"><a className="skip-link" href="#studio-main">Saltar al contenido</a><StudioHeader user={user} onLogout={() => setUser(null)} /><main id="studio-main" className="studio-main"><p role="status" className="status-message">{notice}</p><Routes><Route path="/" element={<CollectionPage albums={albums} saved={saved} onSave={save} />} /><Route path="/explorar" element={<CollectionPage albums={albums} saved={saved} onSave={save} />} /><Route path="/mis-albumes" element={<CollectionPage albums={albums} saved={saved} onSave={save} mode="mine" />} /><Route path="/favoritos" element={<CollectionPage albums={albums} saved={saved} onSave={save} mode="saved" />} /><Route path="/crear" element={<Create user={user} onCreate={create} />} /><Route path="/album/:id" element={<Detail key={location.pathname} albums={albums} saved={saved} onSave={save} onDelete={remove} />} /><Route path="/album/:id/editar" element={<Create key={location.pathname} user={user} albums={albums} onUpdate={update} />} /><Route path="/perfil/editar" element={<EditProfile user={user} onUpdate={updateProfile} />} /><Route path="/ajustes" element={<Settings user={user} albums={localAlbums} saved={saved} onImport={importArchive} />} /><Route path="/aprender" element={<Learn />} /><Route path="/aprender/:id" element={<Learn />} /><Route path="/autor/:name" element={<Author albums={albums} user={user} />} /><Route path="/perfil" element={<Author albums={albums} user={user} />} /><Route path="*" element={<NotFound />} /></Routes></main><StudioFooter /></div>;
+  return <div className="studio-shell"><a className="skip-link" href="#studio-main">Saltar al contenido</a><StudioHeader user={user} onLogout={logout} /><main id="studio-main" className="studio-main"><p role="status" className="status-message">{notice}</p><Routes><Route path="/" element={<CollectionPage albums={albums} saved={saved} onSave={save} />} /><Route path="/explorar" element={<CollectionPage albums={albums} saved={saved} onSave={save} />} /><Route path="/mis-albumes" element={<CollectionPage albums={albums} saved={saved} onSave={save} mode="mine" />} /><Route path="/favoritos" element={<CollectionPage albums={albums} saved={saved} onSave={save} mode="saved" />} /><Route path="/crear" element={<Create user={user} onCreate={create} />} /><Route path="/album/:id" element={<Detail key={location.pathname} albums={albums} saved={saved} onSave={save} onDelete={remove} />} /><Route path="/album/:id/editar" element={<Create key={location.pathname} user={user} albums={albums} onUpdate={update} />} /><Route path="/perfil/editar" element={<EditProfile user={user} onUpdate={updateProfile} />} /><Route path="/ajustes" element={<Settings user={user} albums={localAlbums} saved={saved} onImport={importArchive} />} /><Route path="/aprender" element={<Learn />} /><Route path="/aprender/:id" element={<Learn />} /><Route path="/autor/:name" element={<Author albums={albums} user={user} />} /><Route path="/perfil" element={<Author albums={albums} user={user} />} /><Route path="*" element={<NotFound />} /></Routes></main><StudioFooter /></div>;
 }

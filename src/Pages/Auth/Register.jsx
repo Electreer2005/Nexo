@@ -9,25 +9,24 @@ import {
 } from 'react-icons/fa';
 import Logo from '../../assets/Logo.png';
 import './Auth.css';
+import { authErrorMessage } from '../../lib/authErrors';
 
-export default function Register({ setUser }) {
+export default function Register({ onRegister }) {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
-    function handleSubmit(e) {
-        e.preventDefault();
-
-        // Acceso simulado: cualquier correo válido y contraseña no vacía.
-        setUser({
-            id: email.trim().toLowerCase(),
-            email: email.trim(),
-            name: name.trim() || email.trim().split('@')[0],
-        });
-
-        navigate('/', { replace: true });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    async function handleSubmit(e) {
+        e.preventDefault(); if (loading) return;
+        if (!name.trim()) { setError('Escribí tu nombre.'); return; }
+        setLoading(true); setError('');
+        try { await onRegister(name, email, password); navigate('/', { replace:true }); }
+        catch (err) { setError(authErrorMessage(err)); }
+        finally { setLoading(false); }
     }
 
     return (
@@ -84,8 +83,9 @@ export default function Register({ setUser }) {
                                 type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Contraseña"
+                                placeholder="Al menos 6 caracteres"
                                 autoComplete="new-password"
+                                minLength={6}
                                 required
                                 className="input-form"
                             />
@@ -108,8 +108,9 @@ export default function Register({ setUser }) {
                         </div>
                     </div>
 
-                    <button type="submit" className="btn btn--secondary">
-                        Crear cuenta
+                    {error && <p role="alert" className="form-error">{error}</p>}
+                    <button type="submit" disabled={loading} className="btn btn--secondary">
+                        {loading ? "Creando cuenta…" : "Crear cuenta"}
                     </button>
 
                     <div className="RegisterLink">
