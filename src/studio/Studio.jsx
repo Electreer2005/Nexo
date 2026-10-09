@@ -14,6 +14,7 @@ import Author from './pages/Author';
 import NotFound from './pages/NotFound';
 import EditProfile from './pages/EditProfile';
 import Settings from './pages/Settings';
+import Shared, { SharedDetail } from './pages/Shared';
 import Learn from './pages/Learn';
 import './studio.css';
 
@@ -60,8 +61,10 @@ export default function Studio({ user, setUser }) {
       <Route path="/explorar" element={<CollectionPage albums={albums} saved={cloud.saved} onSave={save} />} />
       <Route path="/mis-albumes" element={<CollectionPage albums={albums} saved={cloud.saved} onSave={save} mode="mine" />} />
       <Route path="/favoritos" element={<CollectionPage albums={albums} saved={cloud.saved} onSave={save} mode="saved" />} />
+      <Route path="/compartidos" element={<Shared user={user} />} />
+      <Route path="/compartido/:ownerId/:albumId" element={<SharedDetail key={location.pathname} />} />
       <Route path="/crear" element={<Create user={user} onCreate={create} />} />
-      <Route path="/album/:id" element={<Detail key={location.pathname} albums={albums} saved={cloud.saved} onSave={save} onDelete={remove} />} />
+      <Route path="/album/:id" element={<Detail key={location.pathname} albums={albums} saved={cloud.saved} onSave={save} onDelete={remove} user={user} />} />
       <Route path="/album/:id/editar" element={<Create key={location.pathname} user={user} albums={albums} onUpdate={update} />} />
       <Route path="/perfil/editar" element={<EditProfile user={user} onUpdate={setUser} />} />
       <Route path="/ajustes" element={<Settings user={user} albums={cloud.albums} saved={cloud.saved} onImport={importArchive} onImportLocal={importLocal} />} />

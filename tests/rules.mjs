@@ -46,3 +46,30 @@ test('Storage: rechaza tipos no admitidos, archivos grandes y sobrescritura',asy
  await assertFails(uploadBytes(ref(alice,'users/alice/albums/work/owner.jpg'),new Uint8Array([1]),{contentType:'image/jpeg'}));
  await assertSucceeds(deleteObject(ref(alice,'users/alice/albums/work/owner.jpg')));
 });
+
+test('Invitaciones: lectura verificada, consulta por destinatario y revocación',async()=>{
+ const {collectionGroup,query,where,getDocs,deleteDoc,writeBatch}=await import('firebase/firestore');
+ const alice=env.authenticatedContext('alice',{email:'alice@test.com',email_verified:true}).firestore();
+ const bobContext=env.authenticatedContext('bob',{email:'Bob@test.com',email_verified:true});const bob=bobContext.firestore();
+ const unverified=env.authenticatedContext('bob-unverified',{email:'bob@test.com',email_verified:false}).firestore();
+ const charlie=env.authenticatedContext('charlie',{email:'charlie@test.com',email_verified:true}).firestore();
+ const album='users/alice/albums/shared';const invitation=album+'/albumInvitations/bob@test.com';
+ await assertSucceeds(setDoc(doc(alice,album),{...record(),shareKey:'unique-generation'}));
+ await assertSucceeds(setDoc(doc(alice,invitation),{recipientEmail:'bob@test.com',ownerId:'alice',albumId:'shared',shareKey:'unique-generation',title:'Prueba',createdAt:serverTimestamp()}));
+ await assertSucceeds(getDoc(doc(bob,album)));await assertFails(getDoc(doc(unverified,album)));await assertFails(getDoc(doc(charlie,album)));
+ await assertSucceeds(getDocs(query(collectionGroup(bob,'albumInvitations'),where('recipientEmail','==','bob@test.com'))));
+ await assertFails(getDocs(collectionGroup(bob,'albumInvitations')));
+ await assertFails(setDoc(doc(bob,album),{...record(),shareKey:'unique-generation',revision:2}));await assertFails(deleteDoc(doc(bob,invitation)));
+ const storage=env.authenticatedContext('alice').storage();const path='users/alice/albums/shared/photo.jpg';
+ await assertSucceeds(uploadBytes(ref(storage,path),new Uint8Array([1]),{contentType:'image/jpeg'}));
+ await assertSucceeds(getMetadata(ref(bobContext.storage(),path)));
+ await assertFails(deleteObject(ref(bobContext.storage(),path)));
+ await assertSucceeds(deleteDoc(doc(alice,invitation)));await assertFails(getDoc(doc(bob,album)));await assertFails(getMetadata(ref(bobContext.storage(),path)));
+ // Una invitación vieja no debe abrir una serie recreada con el mismo ID.
+ await setDoc(doc(alice,invitation),{recipientEmail:'bob@test.com',ownerId:'alice',albumId:'shared',shareKey:'unique-generation',title:'Prueba',createdAt:serverTimestamp()});
+ await deleteDoc(doc(alice,album));await setDoc(doc(alice,album),{...record(),shareKey:'new-generation'});await assertFails(getDoc(doc(bob,album)));await assertFails(getMetadata(ref(bobContext.storage(),path)));
+ // Migración atómica de los álbumes anteriores, sin shareKey.
+ const legacy='users/alice/albums/legacy';await setDoc(doc(alice,legacy),record());const batch=writeBatch(alice);
+ batch.update(doc(alice,legacy),{shareKey:'legacy-key',revision:2,updatedAt:serverTimestamp()});batch.set(doc(alice,legacy+'/albumInvitations/bob@test.com'),{recipientEmail:'bob@test.com',ownerId:'alice',albumId:'legacy',shareKey:'legacy-key',title:'Prueba',createdAt:serverTimestamp()});
+ await assertSucceeds(batch.commit());await assertSucceeds(getDoc(doc(bob,legacy)));
+});

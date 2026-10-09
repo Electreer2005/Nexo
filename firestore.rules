@@ -2,6 +2,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function owner(uid) { return request.auth != null && request.auth.uid == uid; }
+    function verified() { return request.auth != null && request.auth.token.email_verified == true; }
+    function invited(uid, albumId) {
+      let email = request.auth.token.email.lower();
+      return verified() && resource.data.get('shareKey','') != ''
+        && get(/databases/$(database)/documents/users/$(uid)/albums/$(albumId)/albumInvitations/$(email)).data.shareKey == resource.data.shareKey;
+    }
+    match /{path=**}/albumInvitations/{email} {
+      allow read: if verified() && resource.data.recipientEmail == request.auth.token.email.lower();
+    }
     match /users/{uid} {
       allow read: if owner(uid);
       allow create, update: if owner(uid) && request.resource.data.keys().hasOnly(['name','bio','location','discipline'])
@@ -10,7 +19,8 @@ service cloud.firestore {
         && request.resource.data.location is string && request.resource.data.location.size() <= 100
         && request.resource.data.discipline is string && request.resource.data.discipline.size() <= 100;
       match /albums/{albumId} {
-        function valid() { return request.resource.data.keys().hasOnly(['ownerId','title','description','discipline','location','tags','date','visibility','photos','revision','updatedAt'])
+        function valid() { return request.resource.data.keys().hasOnly(['shareKey','ownerId','title','description','discipline','location','tags','date','visibility','photos','revision','updatedAt'])
+          && request.resource.data.get('shareKey','') is string && request.resource.data.get('shareKey','').size() <= 100
           && request.resource.data.ownerId == uid && request.resource.data.visibility == 'private'
           && request.resource.data.title is string && request.resource.data.title.size() > 0 && request.resource.data.title.size() <= 100
           && request.resource.data.description is string && request.resource.data.description.size() <= 1500
@@ -20,9 +30,21 @@ service cloud.firestore {
           && request.resource.data.tags is list && request.resource.data.tags.size() <= 50
           && request.resource.data.photos is list && request.resource.data.photos.size() > 0 && request.resource.data.photos.size() <= 12
           && request.resource.data.revision is int && request.resource.data.updatedAt == request.time; }
-        allow read, delete: if owner(uid);
+        allow get: if owner(uid) || invited(uid, albumId);
+        allow list, delete: if owner(uid);
         allow create: if owner(uid) && valid() && request.resource.data.revision == 1;
-        allow update: if owner(uid) && valid() && request.resource.data.revision == resource.data.revision + 1;
+        allow update: if owner(uid) && valid() && request.resource.data.revision == resource.data.revision + 1
+          && (resource.data.get('shareKey','') == '' || request.resource.data.shareKey == resource.data.shareKey);
+      }
+      match /albums/{albumId}/albumInvitations/{email} {
+        allow read, delete: if owner(uid);
+        allow create, update: if owner(uid)
+          && request.resource.data.keys().hasOnly(['recipientEmail','ownerId','albumId','shareKey','title','createdAt'])
+          && request.resource.data.recipientEmail == email && email.size() <= 254
+          && request.resource.data.ownerId == uid && request.resource.data.albumId == albumId
+          && request.resource.data.title is string && request.resource.data.title.size() <= 100
+          && request.resource.data.shareKey == getAfter(/databases/$(database)/documents/users/$(uid)/albums/$(albumId)).data.shareKey
+          && request.resource.data.createdAt == request.time;
       }
       match /preferences/saved {
         allow read: if owner(uid);

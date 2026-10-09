@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks=vi.hoisted(()=>({ upload:vi.fn(),remove:vi.fn(),transaction:vi.fn(),get:vi.fn(),set:vi.fn(),del:vi.fn() }));
 vi.mock('../src/lib/firebase',()=>({app:{}}));
 vi.mock('firebase/storage',()=>({ getStorage:()=>({}),ref:(_,path)=>path,uploadString:mocks.upload,deleteObject:mocks.remove,getBlob:vi.fn() }));
-vi.mock('firebase/firestore',()=>({ getFirestore:()=>({}),collection:vi.fn(),doc:(_, ...path)=>path.join('/'),getDoc:vi.fn(),onSnapshot:vi.fn(),runTransaction:mocks.transaction,serverTimestamp:()=> 'server-time',setDoc:vi.fn() }));
+vi.mock('firebase/firestore',()=>({ getFirestore:()=>({}),collection:vi.fn(),doc:(_, ...path)=>path.join('/'),getDoc:vi.fn(),getDocs:vi.fn().mockResolvedValue({docs:[]}),deleteDoc:vi.fn(),onSnapshot:vi.fn(),runTransaction:mocks.transaction,serverTimestamp:()=> 'server-time',setDoc:vi.fn() }));
 import { deleteAlbum, saveAlbum, toggleSaved } from '../src/lib/cloudArchive';
 const input=()=>({id:'series',title:'Trabajo',description:'',discipline:'Paisaje',location:'',tags:[],date:'2026-10-09',photos:[{id:'photo',title:'Foto',src:'data:image/jpeg;base64,YQ=='}]});
 beforeEach(()=>{
